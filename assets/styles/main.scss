@@ -1,0 +1,19 @@
+@import "the-new-css-reset/css/reset.css";
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap");
+
+body {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 18px;
+  font-style: normal;
+  background-color: $dark-gray;
+  color: $text-color;
+  min-height: 100vh;
+  transition: color 0.5s, background-color 0.5s;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: $text-color;
+}

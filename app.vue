@@ -1,7 +1,9 @@
 <template>
-  <div class="bg-bv-dark-gray h-screen text-bv-text-color font-JetBrainsMono">
-    navbar
-    <NuxtPage />
+  <div class="container">
+    <Sidebar />
+    <div class="content-container">
+      <NuxtPage />
+    </div>
   </div>
 </template>
 
@@ -10,3 +12,13 @@ useHead({
   title: "WYCIWYG - Dashboard",
 });
 </script>
+
+<style lang="scss">
+.container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+}
+
+.content-container {
+}
+</style>
