@@ -13,7 +13,7 @@
 
     <div class="footer">
       <!-- <div>{{ sessionStore.session.user.email }}</div> -->
-      {{ user.email }}
+      <!-- {{ user.email }} -->
       <button class="button block" @click="signOut">Sign Out</button>
     </div>
   </div>
@@ -29,9 +29,8 @@ async function signOut() {
   /* try {
     //loading.value = true;
     let { error } = await supabase.auth.signOut();
-    
-    if (!error) await navigateTo("/");
     if (error) throw error;
+    navigateTo("/");
   } catch (error) {
     alert(error.message);
   } finally {

@@ -23,7 +23,7 @@
 import { ref } from "vue";
 
 definePageMeta({
-  layout: "login",
+  layout: "empty",
 });
 
 const supabase = useSupabaseClient();
