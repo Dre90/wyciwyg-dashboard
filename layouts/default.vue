@@ -1,18 +1,13 @@
 <template>
   <div class="container">
     <Sidebar />
-    <div class="content-container">
-      <NuxtPage />
-    </div>
+    <NuxtPage />
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
   display: grid;
-  grid-template-columns: 350px 1fr;
-}
-
-.content-container {
+  grid-template-columns: 300px 1fr;
 }
 </style>

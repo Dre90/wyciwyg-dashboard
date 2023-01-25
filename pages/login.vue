@@ -23,7 +23,7 @@
 import { ref } from "vue";
 
 definePageMeta({
-  layout: "loginLayout",
+  layout: "login",
 });
 
 const supabase = useSupabaseClient();
@@ -38,7 +38,7 @@ const handleLogin = async () => {
     loading.value = true;
     const { error } = await supabase.auth.signInWithOtp({
       email: email.value,
-      options: { emailRedirectTo: "http://localhost:5173/dashboard" },
+      options: { emailRedirectTo: "http://localhost:3000" },
     });
     if (error) throw error;
     if (!error) showMsg.value = true;
