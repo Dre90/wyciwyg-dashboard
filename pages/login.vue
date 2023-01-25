@@ -21,6 +21,11 @@
 
 <script setup>
 import { ref } from "vue";
+
+definePageMeta({
+  layout: "loginLayout",
+});
+
 const supabase = useSupabaseClient();
 
 const email = ref(null);
