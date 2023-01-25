@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@nuxtjs/supabase": "^0.3.0",
-    "nuxt": "3.0.0",
+    "nuxt": "^3.1.0",
     "sass": "^1.57.1",
     "sass-loader": "^13.2.0"
   },
