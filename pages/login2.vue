@@ -1,20 +1,29 @@
 <template>
   <div class="container">
     <main>
-      <h1>Welcome back</h1>
-      <span>Sign in to your account</span>
-      <form @submit.prevent="handleLogin" class="register">
-        <label for="email">Email</label>
-        <input v-model="email" type="email" placeholder="Email" name="email" />
-        <label for="password">Password</label>
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          name="password"
-        />
-        <input type="submit" value="Login" />
-      </form>
+      <div class="wrapper">
+        <h1 class="text-3xl">Welcome back</h1>
+        <span class="text-sm">Sign in to your account</span>
+        <form @submit.prevent="handleLogin" class="register">
+          <label for="email">Email</label>
+          <input
+            v-model="email"
+            type="email"
+            placeholder="you@example.com"
+            name="email"
+            class="text-sm"
+          />
+          <label for="password">Password</label>
+          <input
+            v-model="password"
+            type="password"
+            placeholder="********"
+            name="password"
+            class="text-sm"
+          />
+          <input type="submit" value="Login" class="text-xl" />
+        </form>
+      </div>
     </main>
     <aside>
       <div class="image-container">
@@ -40,25 +49,28 @@ const handleLogin = async () => {
 <style lang="scss" scoped>
 .container {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 500px 1fr;
   height: 100vh;
 }
 
 main {
+  align-items: center;
+  border-right: 2px solid $dark-gray-plus1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 40px;
-  h1 {
-    font-size: 2em;
+
+  .wrapper {
+    width: 100%;
+    max-width: 348px;
   }
-  border-right: 2px solid $dark-gray-plus1;
 }
 
 form {
-  margin-top: 40px;
   display: flex;
   flex-direction: column;
+  margin-top: 40px;
 
   label {
     margin-bottom: 5px;
@@ -71,7 +83,7 @@ form {
     padding: 10px;
 
     &::placeholder {
-      color: #aaaaaa;
+      color: #626262;
     }
 
     &:focus {
@@ -84,13 +96,12 @@ form {
     align-self: end;
     background-color: $bv-orange;
     border: 2px solid $bv-orange;
-    cursor: pointer;
-    font-size: 1.2em;
-    font-weight: 700;
-    text-align: center;
-    padding: 15px 0;
-    width: 100%;
     color: $text-color-dark;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
 
     &:focus,
     &:hover {
@@ -100,18 +111,18 @@ form {
 
     &:active {
       background-color: $bv-text-color-dark;
-      color: $bv-orange;
       border: 2px solid $bv-orange;
+      color: $bv-orange;
     }
   }
 }
 
 aside {
   .image-container {
+    align-items: center;
     display: flex;
     height: 100vh;
     justify-content: center;
-    align-items: center;
   }
 }
 </style>

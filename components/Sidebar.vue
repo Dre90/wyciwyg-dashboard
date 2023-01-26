@@ -52,7 +52,7 @@ async function signOut() {
   }
 
   a {
-    font-size: 1.5em;
+    font-size: 1.5rem;
   }
 
   .router-link-active {
