@@ -1,10 +1,14 @@
 <template>
-  <div class="container">
-    <main>
-      <div class="wrapper">
-        <h1 class="text-3xl">Welcome back</h1>
-        <span class="text-sm">Sign in to your account</span>
-        <form @submit.prevent="handleLogin" class="register">
+  <div class="flex flex-1 min-h-full">
+    <main
+      class="flex flex-col items-center flex-1 flex-shrink-0 px-5 pt-16 pb-8 border-r shadow-lg bg-scale-200 border-scale-500"
+    >
+      <div class="flex-1 flex flex-col justify-center w-[384px]">
+        <div class="mb-10">
+          <h1 class="mt-8 mb-2 text-2xl lg:text-3xl">Welcome back</h1>
+          <span class="text-sm">Sign in to your account</span>
+        </div>
+        <form @submit.prevent="handleLogin" class="flex flex-col gap-4">
           <label for="email">Email</label>
           <input
             v-model="email"
@@ -25,7 +29,9 @@
         </form>
       </div>
     </main>
-    <aside>
+    <aside
+      class="flex-col items-center justify-center flex-1 flex-shrink hidden basis-1/4 xl:flex"
+    >
       <div class="image-container">
         <img src="../assets/images/logo.svg" alt="" />
       </div>
@@ -46,7 +52,7 @@ const handleLogin = async () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .container {
   display: grid;
   grid-template-columns: 500px 1fr;
@@ -125,4 +131,4 @@ aside {
     justify-content: center;
   }
 }
-</style>
+</style> -->

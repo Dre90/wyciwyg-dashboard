@@ -14,7 +14,7 @@ definePageMeta({
 });
 </script>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .flex {
   display: flex;
   flex-direction: row;
@@ -30,4 +30,4 @@ definePageMeta({
   height: 250px;
   width: 400px;
 }
-</style>
+</style> -->

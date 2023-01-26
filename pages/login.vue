@@ -53,7 +53,7 @@ const handleLogin = async () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .background {
   align-items: center;
   background-color: rgba(42, 42, 42, 0.9);
@@ -146,4 +146,4 @@ h1 {
     }
   }
 }
-</style>
+</style> -->

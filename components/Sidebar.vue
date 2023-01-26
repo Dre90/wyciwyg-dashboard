@@ -39,7 +39,7 @@ async function signOut() {
 }
 </script>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .sidebar {
   height: 100vh;
   padding: 20px;
@@ -63,4 +63,4 @@ async function signOut() {
     margin-top: auto;
   }
 }
-</style>
+</style> -->

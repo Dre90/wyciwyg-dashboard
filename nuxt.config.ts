@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxtjs/supabase"],
+  modules: ["@nuxtjs/supabase", "@nuxtjs/tailwindcss"],
   app: {
     head: {
       title: "WYCIWYG - Dashboard",
@@ -17,14 +17,4 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/png", href: "favicon-16x16.png" }],
     },
   },
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@import "@/assets/styles/variables.scss";',
-        },
-      },
-    },
-  },
-  css: ["@/assets/styles/main.scss"],
 });

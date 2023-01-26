@@ -6,8 +6,8 @@
 </template>
 
 <style lang="scss" scoped>
-.container {
+/* .container {
   display: grid;
   grid-template-columns: 300px 1fr;
-}
+} */
 </style>
