@@ -71,15 +71,6 @@ definePageMeta({
   layout: "empty",
 });
 
-/* watchEffect(() => {
-  if (user.value) {
-    navigateTo("/");
-  }
-}); */
-
-async function signInWithButton() {
-  console.log("test google");
-}
 
 // Login method using providers
 const login = async (provider) => {

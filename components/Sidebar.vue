@@ -1,17 +1,14 @@
 <template>
-  <div class="sidebar">
+  <div class="flex min-h-full w-80 flex-col bg-dark-gray-plus1 p-5">
     <img
       src="@/assets/images/logo.svg"
       alt="WYCIWYG - What you code is what you get"
+      class="mb-8"
     />
-    <nav>
-      <ul>
-        <li><NuxtLink to="/">Dashboard</NuxtLink></li>
-        <li><NuxtLink to="/challenges">Challenges</NuxtLink></li>
-      </ul>
-    </nav>
 
-    <div class="footer">
+    <Menu />
+
+    <div class="mt-auto">
       <!-- <div>{{ sessionStore.session.user.email }}</div> -->
       <!-- {{ user.email }} -->
       <button class="button block" @click="signOut">Sign Out</button>
@@ -38,29 +35,3 @@ async function signOut() {
   } */
 }
 </script>
-
-<!-- <style lang="scss" scoped>
-.sidebar {
-  height: 100vh;
-  padding: 20px;
-  background-color: $dark-gray-plus1;
-  display: flex;
-  flex-direction: column;
-
-  img {
-    margin-bottom: 30px;
-  }
-
-  a {
-    font-size: 1.5rem;
-  }
-
-  .router-link-active {
-    border-bottom: 2px solid $bv-green;
-  }
-
-  .footer {
-    margin-top: auto;
-  }
-}
-</style> -->

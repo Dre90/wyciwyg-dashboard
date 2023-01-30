@@ -3,3 +3,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.router-link-active {
+  @apply border-b-2 border-bv-green;
+}
