@@ -1,10 +1,21 @@
 <template>
-  <div class="flex">
-    <div class="item">Dashboard</div>
-    <div class="item">Dashboard</div>
-    <div class="item">Dashboard</div>
-    <div class="item">Dashboard</div>
-    <div class="item">Dashboard</div>
+  <div class="m-5 grid grid-cols-12 gap-8">
+    <div class="col-start-1 col-end-3 h-60 bg-dark-gray-plus1 p-5">
+      Dashboard
+    </div>
+    <div class="col-start-3 col-end-10 h-60 bg-dark-gray-plus1 p-5">
+      Dashboard
+    </div>
+    <div class="col-start-10 col-end-13 h-60 bg-dark-gray-plus1 p-5">
+      Dashboard
+    </div>
+    <div class="col-start-1 col-end-13 h-60 bg-dark-gray-plus1 p-5">
+      Dashboard
+    </div>
+
+    <div class="col-start-1 col-end-13 h-60 bg-dark-gray-plus1 p-5">
+      Dashboard
+    </div>
   </div>
 </template>
 
