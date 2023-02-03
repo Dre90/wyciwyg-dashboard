@@ -9,7 +9,7 @@
           <span class="text-sm">Sign in og sign up using</span>
         </div>
         <div class="flex flex-col gap-4">
-          <button
+          <!-- <button
             type="button"
             @click="login('google')"
             class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
@@ -20,14 +20,14 @@
               width="20"
               height="20"
               class="mr-2"
-            >
-              <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-              <path
+            > -->
+          <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+          <!-- <path
                 d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
               />
             </svg>
             <span>Continue with Google</span>
-          </button>
+          </button> -->
           <button
             type="button"
             @click="login('github')"
@@ -64,20 +64,28 @@
 </template>
 
 <script setup>
-/* const user = useSupabaseUser(); */
 const client = useSupabaseAuthClient();
+const user = useSupabaseUser();
 
 definePageMeta({
   layout: "empty",
 });
 
-
 // Login method using providers
 const login = async (provider) => {
-  const { error } = await client.auth.signInWithOAuth({ provider });
-  if (error) {
-    return alert("Something went wrong !");
+  try {
+    //loading.value = true;
+    let { error } = await client.auth.signInWithOAuth({ provider });
+    if (error) throw error;
+  } catch (error) {
+    alert(error.message);
+    //TODO: sett opp bedre håntering
+  } finally {
+    //loading.value = false;
   }
-  navigateTo("/");
 };
+
+watchEffect(async () => {
+  if (user.value) await navigateTo({ path: "/", replace: true });
+});
 </script>

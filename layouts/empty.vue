@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-bv-dark-gray h-screen text-bv-text-color font-JetBrainsMono">
+  <div class="h-screen bg-bv-dark-gray font-JetBrainsMono text-bv-text-color">
     <NuxtPage />
   </div>
 </template>
