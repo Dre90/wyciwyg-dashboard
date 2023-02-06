@@ -1,24 +1,21 @@
 <template>
   <div>
     <h1>challenges</h1>
-    <ul>
-      <li
-        v-for="challenge in activeChallenges"
-        :key="challenge.id"
-        :challenge-id="challenge.id"
-      >
-        {{ challenge.name }}
-      </li>
-    </ul>
-    <ul>
-      <li
-        v-for="challenge in inactiveChallenges"
-        :key="challenge.id"
-        :challenge-id="challenge.id"
-      >
-        {{ challenge.name }}
-      </li>
-    </ul>
+    <div v-if="challengesCount === 0">
+      Create your first challenge here. Button
+      <!-- TODO: -->
+    </div>
+    <div v-else>
+      <ul>
+        <li
+          v-for="challenge in challenges"
+          :key="challenge.id"
+          :challenge-id="challenge.id"
+        >
+          {{ challenge.name }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -29,38 +26,19 @@ definePageMeta({
 
 const client = useSupabaseClient();
 const user = useSupabaseUser();
-const activeChallenges = ref([]);
-const inactiveChallenges = ref([]);
+const challengesCount = ref(0);
 
-async function getChallenges(active) {
-  const activeState = ref("");
+const { data: challenges } = await useAsyncData("challenges", async () => {
+  const { data, error, status, count } = await client
+    .from("Challenges")
+    .select("id, name", { count: "estimated" })
+    .eq("author_id", user.value.id)
+    .order("created_at");
 
-  if (active === true) {
-    activeState.value = true;
-  } else {
-    activeState.value = false;
-  }
+  // TODO: error handling
 
-  try {
-    let { data, error, status } = await client
-      .from("Challenges")
-      .select("id, name")
-      .is("active", activeState.value)
-      .eq("author_id", user.value.id);
-
-    if (error && status !== 406) throw error;
-
-    if (data && status === 200) {
-      return data;
-    }
-  } catch (error) {
-    alert(error.message);
-  }
-}
-
-onMounted(() => {
-  activeChallenges.value = getChallenges(true);
-  inactiveChallenges.value = getChallenges(false);
+  challengesCount.value = count;
+  if (data && status === 200) return data;
 });
 </script>
 
