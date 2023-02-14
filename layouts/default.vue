@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="flex h-screen bg-bv-dark-gray font-JetBrainsMono text-bv-text-color"
-  >
-    <Sidebar />
-    <div class="container m-6">
+  <div class="h-screen bg-bv-dark-gray font-JetBrainsMono text-bv-text-color">
+    <Header />
+    <div class="container mx-auto pt-6">
       <NuxtPage />
     </div>
   </div>

@@ -1,18 +1,25 @@
 <template>
   <div>
-    <h1>challenges</h1>
     <div v-if="challengesCount === 0">
       Create your first challenge here. Button
       <!-- TODO: -->
     </div>
     <div v-else>
-      <ul>
+      <ul class="flex flex-col gap-2">
         <li
           v-for="challenge in challenges"
           :key="challenge.id"
           :challenge-id="challenge.id"
+          class="bg-dark-gray-plus1"
         >
-          {{ challenge.name }}
+          <NuxtLink
+            :to="`/challenges/${challenge.id}`"
+            class="block hover:bg-bv-green-hover-bg"
+          >
+            <div class="p-4">
+              {{ challenge.name }}
+            </div>
+          </NuxtLink>
         </li>
       </ul>
     </div>
@@ -20,25 +27,28 @@
 </template>
 
 <script setup>
-definePageMeta({
-  middleware: "auth",
-});
-
 const client = useSupabaseClient();
 const user = useSupabaseUser();
 const challengesCount = ref(0);
+const challenges = ref([]);
 
-const { data: challenges } = await useAsyncData("challenges", async () => {
-  const { data, error, status, count } = await client
-    .from("Challenges")
-    .select("id, name", { count: "estimated" })
-    .eq("author_id", user.value.id)
-    .order("created_at");
+const { data, error, count } = await client
+  .from("Challenges")
+  .select("id, name", { count: "estimated" })
+  .eq("author_id", user.value.id)
+  .order("created_at");
 
-  // TODO: error handling
+// TODO: error handling
+if (error) console.log(error.message);
 
-  challengesCount.value = count;
-  if (data && status === 200) return data;
+challengesCount.value = count;
+if (data) challenges.value = data;
+
+definePageMeta({
+  middleware: "auth",
+});
+useHead({
+  title: "Challenges | WYCIWYG",
 });
 </script>
 

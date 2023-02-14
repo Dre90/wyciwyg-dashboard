@@ -4,6 +4,6 @@
 
 <script setup>
 useHead({
-  title: "WYCIWYG - Dashboard",
+  title: "WYCIWYG",
 });
 </script>

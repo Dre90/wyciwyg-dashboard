@@ -5,5 +5,5 @@
 @tailwind utilities;
 
 .router-link-active {
-  @apply border-b-2 border-bv-green;
+  @apply border-b-8 border-bv-green;
 }

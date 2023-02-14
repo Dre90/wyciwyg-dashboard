@@ -1,8 +1,8 @@
 <template>
-  <li class="mb-4">
+  <li class="h-full">
     <NuxtLink
       :to="`${link}`"
-      class="text-2xl hover:border-b-2 hover:border-bv-green"
+      class="flex h-full items-center border-b-8 border-dark-gray-plus1 text-2xl hover:border-bv-green"
       ><slot
     /></NuxtLink>
   </li>

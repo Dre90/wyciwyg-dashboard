@@ -23,6 +23,9 @@
 definePageMeta({
   middleware: "auth",
 });
+useHead({
+  title: "Dashboard | WYCIWYG",
+});
 </script>
 
 <!-- <style lang="scss" scoped>
