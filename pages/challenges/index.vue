@@ -16,8 +16,15 @@
             :to="`/challenges/${challenge.id}`"
             class="block hover:bg-bv-green-hover-bg"
           >
-            <div class="p-4">
-              {{ challenge.name }}
+            <div class="flex h-20">
+              <img
+                :src="challenge.image_url"
+                alt="Thumbnail of the challenge reference image"
+                class=""
+              />
+              <div class="ml-6 self-center text-2xl">
+                {{ challenge.name }}
+              </div>
             </div>
           </NuxtLink>
         </li>
@@ -34,7 +41,7 @@ const challenges = ref([]);
 
 const { data, error, count } = await client
   .from("Challenges")
-  .select("id, name", { count: "estimated" })
+  .select("id, name, image_url", { count: "estimated" })
   .eq("author_id", user.value.id)
   .order("created_at");
 
