@@ -5,7 +5,7 @@
     </div>
 
     <div class="flex w-full gap-10">
-      <div class="flex w-1/4 flex-col gap-6">
+      <div class="flex w-1/4 flex-col gap-12">
         <img
           :src="challenge.image_url"
           alt="The challenge reference image"
