@@ -1,12 +1,12 @@
 <template>
-  <div class="flex min-h-full flex-1">
+  <div class="flex h-full min-h-screen flex-1">
     <main
       class="flex flex-1 flex-shrink-0 flex-col items-center border-r border-zinc-700 bg-dark-gray-plus1 px-5 pb-8 pt-16"
     >
       <div class="flex w-[384px] flex-1 flex-col justify-center">
         <div class="mb-10">
-          <h1 class="mt-8 mb-2 text-2xl lg:text-3xl">Welcome back</h1>
-          <span class="text-sm">Sign in og sign up using</span>
+          <h1 class="mt-8 mb-2 text-2xl lg:text-3xl">Welcome</h1>
+          <span class="text-sm">Sign in or sign up using</span>
         </div>
         <div class="flex flex-col gap-4">
           <!-- <button
@@ -54,8 +54,8 @@
       class="hidden flex-1 flex-shrink basis-1/4 flex-col items-center justify-center xl:flex"
     >
       <div class="opacity-60">
-        <nuxt-img
-          src="/images/logo.svg"
+        <img
+          src="@/assets/images/logo.svg"
           alt="WYCIWYG - What you code is what you get"
         />
       </div>
