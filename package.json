@@ -10,10 +10,10 @@
   "devDependencies": {
     "@nuxt/image-edge": "^1.0.0-27907872.f4dd19d",
     "@nuxtjs/supabase": "^0.3.0",
-    "@nuxtjs/tailwindcss": "^6.3.0",
+    "@nuxtjs/tailwindcss": "^6.4.1",
     "@tailwindcss/forms": "^0.5.3",
-    "nuxt": "^3.1.0",
-    "prettier": "^2.8.3",
-    "prettier-plugin-tailwindcss": "^0.2.2"
+    "nuxt": "^3.2.0",
+    "prettier": "^2.8.4",
+    "prettier-plugin-tailwindcss": "^0.2.3"
   }
 }
