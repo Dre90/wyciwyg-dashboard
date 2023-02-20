@@ -3,21 +3,32 @@
     <div class="mb-6 w-full">
       <NuxtLink :to="`/challenges/${id}`" class="">Back</NuxtLink>
     </div>
-    <div>
-      <img
-        :src="referenceImage"
-        alt="The challenge reference image"
-        class="max-w-5xl"
-      />
+    <div class="mb-10 flex flex-row items-start justify-between">
+      <div>
+        <h2 class="text-2xl text-bv-green">Reference</h2>
+        <img
+          :src="referenceImage"
+          alt="The challenge reference image"
+          class="max-w-4xl"
+        />
+      </div>
+      <button
+        class="border-2 border-bv-blue bg-bv-blue p-4 text-bv-green hover:bg-bv-hover-blue active:bg-bv-green active:text-bv-blue"
+        @click="showNameFunction"
+      >
+        Show names
+      </button>
     </div>
 
     <div class="mb-28 grid grid-cols-2 justify-center gap-10">
       <div v-for="result in challengeResults" :key="result.id">
-        <h2 class="text-4xl text-bv-green">{{ result.id }}</h2>
-        <div class="relative h-96 w-auto overflow-hidden bg-white">
+        <h2 class="text-4xl text-bv-green">
+          {{ result.id }}<span v-if="showName"> - {{ result.name }}</span>
+        </h2>
+        <div class="relative h-[700px] w-auto overflow-hidden bg-white">
           <iframe
             :srcdoc="result.value"
-            class="absolute top-0 left-0 h-96 w-auto"
+            class="absolute top-0 left-0 h-[1400px] w-[1600px] origin-top-left scale-50"
           ></iframe>
         </div>
       </div>
@@ -31,6 +42,7 @@ const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const referenceImage = ref("");
 const challengeResults = ref([]);
+const showName = ref(false);
 
 async function getChallengeData(id) {
   const { data, error } = await supabase
@@ -61,6 +73,10 @@ async function getChallengeResults(id) {
   } catch (error) {
     alert(error.message);
   }
+}
+
+function showNameFunction() {
+  showName.value = true;
 }
 
 onMounted(async () => {
