@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div v-if="challengesCount === 0" class="text-6xl text-bv-green">
+    <div v-if="isLoading">
+      <p class="text-4xl text-bv-green">Loading..</p>
+    </div>
+    <div v-else-if="errorObj">
+      <p>Something wrong happen when trying to load your challenges.</p>
+    </div>
+    <div v-else-if="!challenges.length" class="text-4xl text-bv-green">
       <p>You haven't created any challenges yet.</p>
       <p>Create your first challenge here. COMING SOON</p>
       <!-- TODO: -->
@@ -35,22 +41,29 @@
 </template>
 
 <script setup>
-const client = useSupabaseClient();
+const supabase = useSupabaseClient();
 const user = useSupabaseUser();
-const challengesCount = ref(0);
 const challenges = ref([]);
+const errorObj = ref(null);
+const isLoading = ref(true);
 
-const { data, error, count } = await client
-  .from("Challenges")
-  .select("id, name, image_url", { count: "estimated" })
-  .eq("author_id", user.value.id)
-  .order("created_at");
+async function getChallenges() {
+  const { data, error } = await supabase
+    .from("Challenges")
+    .select("id, name, image_url")
+    .eq("author_id", user.value.id)
+    .order("created_at");
 
-// TODO: error handling
-if (error) console.log(error.message);
+  if (data || error) isLoading.value = false;
 
-challengesCount.value = count;
-if (data) challenges.value = data;
+  if (error) errorObj.value = error;
+
+  if (data) challenges.value = data;
+}
+
+onBeforeMount(async () => {
+  getChallenges();
+});
 
 definePageMeta({
   middleware: "auth",

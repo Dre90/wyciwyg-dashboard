@@ -4,7 +4,14 @@
       <NuxtLink to="/challenges" class="">Back</NuxtLink>
     </div>
 
-    <div class="flex w-full gap-10">
+    <div v-if="isLoading">
+      <p class="text-4xl text-bv-green">Loading..</p>
+    </div>
+    <div v-else-if="errorObj">
+      <p>Something wrong happen when trying to load this challenge.</p>
+    </div>
+
+    <div v-else class="flex w-full gap-10">
       <div class="flex w-1/4 flex-col gap-12">
         <img
           :src="challenge.image_url"
@@ -52,21 +59,30 @@
 
 <script setup>
 const { id } = useRoute().params;
-const client = useSupabaseClient();
+const supabase = useSupabaseClient();
 const user = useSupabaseUser();
-const challenge = ref({});
+const challenge = ref(null);
+const errorObj = ref(null);
+const isLoading = ref(true);
 
-const { data, error } = await client
-  .from("Challenges")
-  .select("id, name, instructions, image_url, game_pin")
-  .eq("author_id", user.value.id)
-  .eq("id", id)
-  .single();
+async function getChallenge() {
+  const { data, error } = await supabase
+    .from("Challenges")
+    .select("id, name, instructions, image_url, game_pin")
+    .eq("author_id", user.value.id)
+    .eq("id", id)
+    .single();
 
-// TODO: error handling
-if (error) console.log(error.message);
+  if (data || error) isLoading.value = false;
 
-if (data) challenge.value = data;
+  if (error) errorObj.value = error;
+
+  if (data) challenge.value = data;
+}
+
+onBeforeMount(async () => {
+  getChallenge();
+});
 
 definePageMeta({
   middleware: "auth",
