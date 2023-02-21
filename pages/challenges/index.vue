@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div v-if="challengesCount === 0">
-      Create your first challenge here. Button
+    <div v-if="challengesCount === 0" class="text-6xl text-bv-green">
+      <p>You haven't created any challenges yet.</p>
+      <p>Create your first challenge here. COMING SOON</p>
       <!-- TODO: -->
     </div>
     <div v-else>

@@ -13,6 +13,7 @@
         />
       </div>
       <button
+        v-if="challengeResults.length"
         class="border-2 border-bv-blue bg-bv-blue p-4 text-bv-green hover:bg-bv-hover-blue active:bg-bv-green active:text-bv-blue"
         @click="showNameFunction"
       >
@@ -20,7 +21,13 @@
       </button>
     </div>
 
-    <div class="mb-28 grid grid-cols-2 justify-center gap-10">
+    <div v-if="!challengeResults.length">
+      <p class="text-6xl text-bv-green">
+        There are no results yet on this challenge
+      </p>
+    </div>
+
+    <div v-else class="mb-28 grid grid-cols-2 justify-center gap-10">
       <div v-for="result in challengeResults" :key="result.id">
         <h2 class="text-4xl text-bv-green">
           {{ result.id }}<span v-if="showName"> - {{ result.name }}</span>
@@ -79,7 +86,7 @@ function showNameFunction() {
   showName.value = true;
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   getChallengeData(id);
   getChallengeResults(id);
 });
