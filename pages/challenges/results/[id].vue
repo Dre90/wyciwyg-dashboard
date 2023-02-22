@@ -85,7 +85,7 @@ function showNameFunction() {
   showName.value = true;
 }
 
-onBeforeMount(async () => {
+onMounted(async () => {
   getChallengeData(id);
   getChallengeResults(id);
 });

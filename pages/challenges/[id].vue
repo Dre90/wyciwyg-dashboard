@@ -84,7 +84,7 @@ async function getChallenge() {
   if (data) challenge.value = data;
 }
 
-onBeforeMount(async () => {
+onMounted(async () => {
   getChallenge();
 });
 

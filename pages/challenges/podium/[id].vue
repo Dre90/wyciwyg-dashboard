@@ -132,7 +132,7 @@ function countVoteResults(results) {
   return resultsArray;
 }
 
-onBeforeMount(() => {
+onMounted(() => {
   getVoteResults();
 });
 

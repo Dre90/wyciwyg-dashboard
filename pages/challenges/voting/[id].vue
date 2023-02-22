@@ -38,7 +38,7 @@ async function getChallenges() {
   if (data) gamePin.value = data.game_pin;
 }
 
-onBeforeMount(async () => {
+onMounted(async () => {
   getChallenges();
 });
 

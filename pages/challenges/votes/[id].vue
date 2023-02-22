@@ -79,7 +79,7 @@ function countVoteResults(results) {
   return resultsArray;
 }
 
-onBeforeMount(async () => {
+onMounted(async () => {
   getVoteResults();
 });
 
