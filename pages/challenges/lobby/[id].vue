@@ -1,12 +1,16 @@
 <template>
   <div>
-    <div class="mb-6 w-full">
-      <NuxtLink :to="`/challenges/${id}`" class="">Back</NuxtLink>
-    </div>
+    <Back :link="`/challenges/${id}`" />
 
     <div class="mt-10 flex gap-10">
       <div class="flex w-1/4 flex-col">
-        <ul>
+        <div v-if="isLoading">
+          <p class="text-4xl text-bv-green">Loading..</p>
+        </div>
+        <div v-else-if="errorObj">
+          <p>Something wrong happen when trying to load userlist.</p>
+        </div>
+        <ul v-else>
           <li
             v-for="item in userList"
             :key="item.name"
@@ -18,6 +22,7 @@
       </div>
       <div class="flex w-1/2 flex-col">
         <div v-if="!gameStarted" class="flex flex-col items-center">
+          <span v-if="!gamePin" class="text-9xl text-bv-green">000000</span>
           <span class="text-9xl text-bv-green">{{ gamePin }}</span>
           <p class="text-xl">Game pin</p>
         </div>
@@ -74,6 +79,8 @@ const minutes = ref(15);
 const timerInterval = ref("");
 let counter = ref(0);
 const userList = ref([]);
+const errorObj = ref(null);
+const isLoading = ref(true);
 
 const formatTime = (timer) => {
   const minutes = Math.floor(timer / 60);
@@ -100,36 +107,29 @@ const startTimer = () => {
   }, 1000);
 };
 
-const { data, error } = await supabase
-  .from("Challenges")
-  .select("game_pin")
-  .eq("author_id", user.value.id)
-  .eq("id", id)
-  .single();
+async function getGamePin() {
+  const { data } = await supabase
+    .from("Challenges")
+    .select("game_pin")
+    .eq("author_id", user.value.id)
+    .eq("id", id)
+    .single();
 
-// TODO: error handling
-if (error) console.log(error.message);
+  if (data) gamePin.value = data.game_pin;
+}
 
-if (data) gamePin.value = data.game_pin;
-
-const highestCombo = computed(() => {
-  return userList.value.reduce((acc, curr) => {
-    if (curr.combo > acc) {
-      return curr.combo;
-    }
-    return acc;
-  }, 0);
-});
-
-onMounted(async () => {
+async function getUserData() {
   let existingData = [];
+
   const { data, error } = await supabase
     .from("Stats")
     .select("*")
     .eq("challenge_id", id);
 
-  // TODO: error handling
-  if (error) console.log(error.message);
+  if (data || error) isLoading.value = false;
+
+  if (error) errorObj.value = error;
+
   if (data) existingData = data;
 
   const initialUserList = existingData.map((i) => {
@@ -140,7 +140,9 @@ onMounted(async () => {
   });
 
   userList.value = initialUserList;
+}
 
+async function subscribeToUserData() {
   supabase
     .channel("*")
     .on(
@@ -175,6 +177,21 @@ onMounted(async () => {
       }
     )
     .subscribe();
+}
+
+const highestCombo = computed(() => {
+  return userList.value.reduce((acc, curr) => {
+    if (curr.combo > acc) {
+      return curr.combo;
+    }
+    return acc;
+  }, 0);
+});
+
+onMounted(async () => {
+  getGamePin();
+  getUserData();
+  subscribeToUserData();
 });
 
 definePageMeta({

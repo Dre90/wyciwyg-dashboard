@@ -14,5 +14,8 @@
     "nuxt": "^3.2.0",
     "prettier": "^2.8.4",
     "prettier-plugin-tailwindcss": "^0.2.3"
+  },
+  "dependencies": {
+    "vue-confetti-explosion": "^1.0.2"
   }
 }

@@ -1,10 +1,15 @@
 <template>
   <div>
-    <div class="mb-6 w-full">
-      <NuxtLink to="/challenges" class="">Back</NuxtLink>
+    <Back link="/challenges" />
+
+    <div v-if="isLoading">
+      <p class="text-4xl text-bv-green">Loading..</p>
+    </div>
+    <div v-else-if="errorObj">
+      <p>Something wrong happen when trying to load this challenge.</p>
     </div>
 
-    <div class="flex w-full gap-10">
+    <div v-else class="flex w-full gap-10">
       <div class="flex w-1/4 flex-col gap-12">
         <img
           :src="challenge.image_url"
@@ -27,6 +32,12 @@
             class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
           >
             Result
+          </NuxtLink>
+          <NuxtLink
+            :to="`voting/${challenge.id}`"
+            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
+          >
+            Voting information
           </NuxtLink>
           <NuxtLink
             :to="`podium/${challenge.id}`"
@@ -52,21 +63,30 @@
 
 <script setup>
 const { id } = useRoute().params;
-const client = useSupabaseClient();
+const supabase = useSupabaseClient();
 const user = useSupabaseUser();
-const challenge = ref({});
+const challenge = ref(null);
+const errorObj = ref(null);
+const isLoading = ref(true);
 
-const { data, error } = await client
-  .from("Challenges")
-  .select("id, name, instructions, image_url, game_pin")
-  .eq("author_id", user.value.id)
-  .eq("id", id)
-  .single();
+async function getChallenge() {
+  const { data, error } = await supabase
+    .from("Challenges")
+    .select("id, name, instructions, image_url, game_pin")
+    .eq("author_id", user.value.id)
+    .eq("id", id)
+    .single();
 
-// TODO: error handling
-if (error) console.log(error.message);
+  if (data || error) isLoading.value = false;
 
-if (data) challenge.value = data;
+  if (error) errorObj.value = error;
+
+  if (data) challenge.value = data;
+}
+
+onMounted(async () => {
+  getChallenge();
+});
 
 definePageMeta({
   middleware: "auth",

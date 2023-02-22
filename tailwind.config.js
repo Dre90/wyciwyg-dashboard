@@ -11,6 +11,7 @@ module.exports = {
         "bv-green": "#79fe9d",
         "bv-green-hover-bg": "#313833",
         "bv-blue": "#1d43c6",
+        "bv-hover-blue": "#3b61e2",
         "bv-orange": "#f9a86f",
         "bv-dark-orange": "#e09763",
         "bv-citrine-white": "#f9ead4",
