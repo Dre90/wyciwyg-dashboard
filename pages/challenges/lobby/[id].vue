@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="mb-6 w-full">
-      <NuxtLink :to="`/challenges/${id}`" class="">Back</NuxtLink>
-    </div>
+    <Back :link="`/challenges/${id}`" />
 
     <div class="mt-10 flex gap-10">
       <div class="flex w-1/4 flex-col">

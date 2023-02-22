@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="mb-6 w-full">
-      <NuxtLink :to="`/challenges/${id}`" class="">Back</NuxtLink>
-    </div>
+    <Back :link="`/challenges/${id}`" />
 
     <div v-if="!voteResults.length">
       <p class="text-6xl text-bv-green">

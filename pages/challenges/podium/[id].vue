@@ -1,10 +1,14 @@
 <template>
   <div>
-    <div class="mb-6 w-full">
-      <NuxtLink :to="`/challenges/${id}`" class="">Back</NuxtLink>
-    </div>
+    <Back :link="`/challenges/${id}`" />
     <div>
-      <h1 @click="showPosition">{{ challenge.name }}</h1>
+      <button
+        v-if="nextPosition !== 0"
+        @click="showPosition"
+        class="border-2 border-bv-blue bg-bv-blue p-4 text-bv-green hover:bg-bv-hover-blue active:bg-bv-green active:text-bv-blue"
+      >
+        Show {{ nextPosition }} place
+      </button>
     </div>
     <div class="flex w-full justify-center overflow-visible">
       <ConfettiExplosion
@@ -35,7 +39,6 @@
 import ConfettiExplosion from "vue-confetti-explosion";
 const { id } = useRoute().params;
 const supabase = useSupabaseClient();
-const user = useSupabaseUser();
 
 const polePosition = reactive({
   1: [],
@@ -43,7 +46,6 @@ const polePosition = reactive({
   3: [],
 });
 
-const challenge = ref("");
 const voteResults = ref([]);
 const nextPosition = ref(3);
 const visible = ref(false);
@@ -52,20 +54,6 @@ let particles = ref(100);
 const topThree = computed(() => {
   return voteResults.value.slice(0, 3);
 });
-
-async function getChallengeData(id) {
-  const { data, error } = await supabase
-    .from("Challenges")
-    .select("*")
-    .eq("author_id", user.value.id)
-    .eq("id", id)
-    .single();
-
-  // TODO: error handling
-  if (error) console.log(error.message);
-
-  if (data) challenge.value = data;
-}
 
 async function getVoteResults() {
   try {
@@ -88,7 +76,7 @@ const explode = async () => {
   visible.value = false;
   await nextTick();
   visible.value = true;
-  particles.value = particles.value + 200;
+  particles.value = particles.value + 50;
 };
 
 const showPosition = () => {
@@ -145,7 +133,6 @@ function countVoteResults(results) {
 }
 
 onBeforeMount(() => {
-  getChallengeData(id);
   getVoteResults();
 });
 

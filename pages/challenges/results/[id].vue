@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div class="mb-6 w-full">
-      <NuxtLink :to="`/challenges/${id}`" class="">Back</NuxtLink>
-    </div>
+    <Back :link="`/challenges/${id}`" />
+
     <div class="mb-10 flex flex-row items-start justify-between">
       <div>
         <h2 class="text-2xl text-bv-green">Reference</h2>
