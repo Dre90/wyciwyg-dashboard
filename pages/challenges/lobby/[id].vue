@@ -14,6 +14,7 @@
           <li
             v-for="item in userList"
             :key="item.id"
+            :id="item.id"
             class="pb-3 text-2xl text-bv-green"
           >
             {{ item.name }} - {{ item.combo }}
