@@ -13,7 +13,8 @@
         <ul v-else>
           <li
             v-for="item in userList"
-            :key="item.name"
+            :key="item.id"
+            :id="item.id"
             class="pb-3 text-2xl text-bv-green"
           >
             {{ item.name }} - {{ item.combo }}
@@ -134,6 +135,7 @@ async function getUserData() {
 
   const initialUserList = existingData.map((i) => {
     return {
+      id: i.id,
       name: i.name,
       combo: 0,
     };
@@ -152,6 +154,7 @@ async function subscribeToUserData() {
         if (payload.eventType == "INSERT") {
           // Add name.
           userList.value.push({
+            id: payload.new.id,
             name: payload.new.name,
             combo: 0,
           });
@@ -159,14 +162,16 @@ async function subscribeToUserData() {
 
         if (payload.new?.challenge_id == id) {
           const user = payload.new.name;
+          const user_id = payload.new.id;
           const value = parseInt(payload.new.value, 10);
 
           const updatedUserList = userList.value.map((i) => {
-            if (i.name !== user) {
+            if (i.id !== user_id) {
               return i;
             }
 
             return {
+              id: user_id,
               name: user,
               combo: value,
             };
