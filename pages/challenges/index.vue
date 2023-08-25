@@ -65,9 +65,6 @@ onMounted(async () => {
   getChallenges();
 });
 
-definePageMeta({
-  middleware: "auth",
-});
 useHead({
   title: "Challenges | WYCIWYG",
 });

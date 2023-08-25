@@ -85,9 +85,6 @@ const createChallenge = async () => {
   console.log("Login");
 };
 
-definePageMeta({
-  middleware: "auth",
-});
 useHead({
   title: "Create new challenge | WYCIWYG",
 });

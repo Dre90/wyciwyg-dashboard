@@ -34,7 +34,7 @@
         <div class="relative h-[700px] w-auto overflow-hidden bg-white">
           <iframe
             :srcdoc="result.value"
-            class="absolute top-0 left-0 h-[1400px] w-[1600px] origin-top-left scale-50"
+            class="absolute left-0 top-0 h-[1400px] w-[1600px] origin-top-left scale-50"
           ></iframe>
         </div>
       </div>
@@ -88,9 +88,5 @@ function showNameFunction() {
 onMounted(async () => {
   getChallengeData(id);
   getChallengeResults(id);
-});
-
-definePageMeta({
-  middleware: "auth",
 });
 </script>

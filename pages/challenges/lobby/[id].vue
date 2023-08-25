@@ -179,7 +179,7 @@ async function subscribeToUserData() {
 
           userList.value = updatedUserList.sort((a, b) => a.combo < b.combo);
         }
-      }
+      },
     )
     .subscribe();
 }
@@ -197,9 +197,5 @@ onMounted(async () => {
   getGamePin();
   getUserData();
   subscribeToUserData();
-});
-
-definePageMeta({
-  middleware: "auth",
 });
 </script>

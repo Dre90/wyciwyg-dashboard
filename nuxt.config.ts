@@ -17,4 +17,15 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/png", href: "favicon-16x16.png" }],
     },
   },
+  runtimeConfig: {
+    public: {
+      baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    },
+  },
+  supabase: {
+    redirectOptions: {
+      login: "/login",
+      callback: "/confirm",
+    },
+  },
 });

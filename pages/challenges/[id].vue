@@ -87,8 +87,4 @@ async function getChallenge() {
 onMounted(async () => {
   getChallenge();
 });
-
-definePageMeta({
-  middleware: "auth",
-});
 </script>
