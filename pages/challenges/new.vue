@@ -4,7 +4,7 @@
     <div>
       <form
         class="flex max-w-xl flex-col gap-4"
-        @submit.prevent="createChallenge"
+        @submit.prevent="createChallenge($event)"
       >
         <fieldset class="flex flex-col gap-1">
           <label for="name">Name</label>
@@ -28,20 +28,21 @@
           />
         </fieldset>
 
-        <!-- <fieldset class="flex flex-col gap-1">
+        <fieldset class="flex flex-col gap-1">
           <label for="refImage">Reference image</label>
           <input
             type="file"
             name="refImage"
-            class="rounded-md text-sm text-bv-dark-gray"
+            accept="image/*"
+            class="rounded-md text-sm"
           />
-        </fieldset> -->
+        </fieldset>
         <div>
           <input
             type="submit"
             class="orangeButton"
-            :value="loading ? 'Loading ...' : 'Save'"
-            :disabled="loading"
+            :value="saving ? 'Saving ...' : 'Save'"
+            :disabled="saving"
           />
         </div>
       </form>
@@ -49,7 +50,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // TODO: https://supabase.com/docs/guides/getting-started/tutorials/with-nuxt-3
 // https://supabase.com/docs/reference/javascript/storage-createbucket
 
@@ -60,11 +61,14 @@ const supabase = useSupabaseClient();
 
 const user = useSupabaseUser();
 
-const loading = ref(false);
-const name = ref("");
-const instructions = ref("");
-const gamePin = ref("");
-const author_id = ref("");
+const saving = ref<boolean>(false);
+const files = ref();
+const name = ref<string>();
+const instructions = ref<string>();
+const gamePin = ref<string>();
+const author_id = ref<string>();
+const ReferenceImageFilePath = ref<string>("");
+const ReferenceImagePublicURL = ref<string>("");
 
 const getAuthorId = async () => {
   author_id.value = user.value.id;
@@ -79,15 +83,57 @@ onMounted(async () => {
   createGamePin();
 });
 
-async function createChallenge() {
+const uploadReferenceImage = async (filesObject: object) => {
+  files.value = filesObject;
   try {
-    loading.value = true;
+    //uploading.value = true
+
+    if (!files.value || files.value.length === 0) {
+      throw new Error("You must select an image to upload.");
+    }
+
+    const file = files.value[0];
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `reference/${fileName}`;
+
+    let { error: uploadError } = await supabase.storage
+      .from("public")
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    ReferenceImageFilePath.value = filePath;
+  } catch (error: any) {
+    alert(error.message);
+  } finally {
+    //uploading.value = false
+  }
+};
+
+const RetrievePublicURL = async () => {
+  const { data } = supabase.storage
+    .from("public")
+    .getPublicUrl(ReferenceImageFilePath.value);
+
+  ReferenceImagePublicURL.value = data.publicUrl;
+};
+
+const createChallenge = async (event: any) => {
+  //console.log(event.target.refImage.files);
+
+  await uploadReferenceImage(event.target.refImage.files);
+  await RetrievePublicURL();
+
+  try {
+    saving.value = true;
 
     const challenge = {
       name: name.value,
       instructions: instructions.value,
       game_pin: gamePin.value,
       author_id: author_id.value,
+      image_url: ReferenceImagePublicURL.value,
     };
 
     let { error } = await supabase.from("Challenges").insert(challenge, {
@@ -95,12 +141,12 @@ async function createChallenge() {
     });
     if (error) throw error;
     navigateTo("/challenges");
-  } catch (error) {
+  } catch (error: any) {
     alert(error.message);
   } finally {
-    loading.value = false;
+    saving.value = false;
   }
-}
+};
 
 useHead({
   title: "Create new challenge | WYCIWYG",
