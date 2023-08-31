@@ -3,7 +3,7 @@
     <Back link="/challenges" />
     <div>
       <form
-        class="flex max-w-xl flex-col gap-4"
+        class="mx-auto flex max-w-xl flex-col gap-4"
         @submit.prevent="createChallenge($event)"
       >
         <fieldset class="flex flex-col gap-1">
@@ -37,7 +37,73 @@
             class="rounded-md text-sm"
           />
         </fieldset>
-        <div>
+        <fieldset class="flex flex-col gap-1">
+          <label for="refImage">Image assets</label>
+          <p class="text-sm">
+            Upload images that are needed for the design. After uploading a
+            image copy the url past it into our instructions so the participants
+            can use them.
+          </p>
+
+          <label class="orangeButton" for="imageAssets">
+            {{ uploading ? "Uploading ..." : "Upload" }}
+          </label>
+          <input
+            type="file"
+            name="imageAssets"
+            id="imageAssets"
+            accept="image/*"
+            class="hidden"
+            multiple
+          />
+          <div class="my-4 grid grid-cols-2 gap-4">
+            <div class="w-full">
+              <img
+                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
+                alt=""
+                class="h-auto w-full"
+              />
+              <div class="mt-4 flex gap-4">
+                <button class="orangeButton">Copy URL</button>
+                <button class="orangeButton">Delete</button>
+              </div>
+            </div>
+            <div class="w-full">
+              <img
+                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
+                alt=""
+                class="h-auto w-full"
+              />
+              <div class="mt-4 flex gap-4">
+                <button class="orangeButton">Copy URL</button>
+                <button class="orangeButton">Delete</button>
+              </div>
+            </div>
+            <div class="w-full">
+              <img
+                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
+                alt=""
+                class="h-auto w-full"
+              />
+              <div class="mt-4 flex gap-4">
+                <button class="orangeButton">Copy URL</button>
+                <button class="orangeButton">Delete</button>
+              </div>
+            </div>
+            <div class="w-full">
+              <img
+                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
+                alt=""
+                class="h-auto w-full"
+              />
+              <div class="mt-4 flex gap-4">
+                <button class="orangeButton">Copy URL</button>
+                <button class="orangeButton">Delete</button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div class="mt-6">
           <input
             type="submit"
             class="orangeButton"
@@ -63,6 +129,7 @@ const user = useSupabaseUser();
 
 const saving = ref<boolean>(false);
 const files = ref();
+const uploading = ref<boolean>(false);
 const name = ref<string>();
 const instructions = ref<string>();
 const gamePin = ref<string>();
@@ -111,29 +178,27 @@ const uploadReferenceImage = async (filesObject: object) => {
   }
 };
 
-const RetrievePublicURL = async () => {
-  const { data } = supabase.storage
-    .from("public")
-    .getPublicUrl(ReferenceImageFilePath.value);
-
-  ReferenceImagePublicURL.value = data.publicUrl;
+const RetrievePublicURL = async (FilePath: string) => {
+  const { data } = supabase.storage.from("public").getPublicUrl(FilePath);
+  return data.publicUrl;
 };
 
 const createChallenge = async (event: any) => {
-  //console.log(event.target.refImage.files);
+  saving.value = true;
 
   await uploadReferenceImage(event.target.refImage.files);
-  await RetrievePublicURL();
+  ReferenceImagePublicURL.value = await RetrievePublicURL(
+    ReferenceImageFilePath.value,
+  );
 
   try {
-    saving.value = true;
-
     const challenge = {
       name: name.value,
       instructions: instructions.value,
       game_pin: gamePin.value,
       author_id: author_id.value,
       image_url: ReferenceImagePublicURL.value,
+      reference_image_file_path: ReferenceImageFilePath.value,
     };
 
     let { error } = await supabase.from("Challenges").insert(challenge, {
@@ -145,6 +210,15 @@ const createChallenge = async (event: any) => {
     alert(error.message);
   } finally {
     saving.value = false;
+  }
+};
+
+const copyContent = async (url: string) => {
+  try {
+    await navigator.clipboard.writeText(url);
+    console.log("Content copied to clipboard");
+  } catch (err) {
+    console.error("Failed to copy: ", err);
   }
 };
 
