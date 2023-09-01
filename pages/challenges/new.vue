@@ -3,7 +3,7 @@
     <Back link="/challenges" />
     <div>
       <form
-        class="mx-auto flex max-w-xl flex-col gap-4"
+        class="mx-auto flex max-w-2xl flex-col gap-4"
         @submit.prevent="createChallenge($event)"
       >
         <fieldset class="flex flex-col gap-1">
@@ -55,50 +55,19 @@
             accept="image/*"
             class="hidden"
             multiple
+            @change="uploadAssets"
+            :disabled="uploading"
           />
           <div class="my-4 grid grid-cols-2 gap-4">
-            <div class="w-full">
-              <img
-                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
-                alt=""
-                class="h-auto w-full"
-              />
+            <div v-for="asset in assetsArray" class="w-full">
+              <img :src="asset.URL" alt="" class="h-auto w-full" />
               <div class="mt-4 flex gap-4">
-                <button class="orangeButton">Copy URL</button>
-                <button class="orangeButton">Delete</button>
-              </div>
-            </div>
-            <div class="w-full">
-              <img
-                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
-                alt=""
-                class="h-auto w-full"
-              />
-              <div class="mt-4 flex gap-4">
-                <button class="orangeButton">Copy URL</button>
-                <button class="orangeButton">Delete</button>
-              </div>
-            </div>
-            <div class="w-full">
-              <img
-                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
-                alt=""
-                class="h-auto w-full"
-              />
-              <div class="mt-4 flex gap-4">
-                <button class="orangeButton">Copy URL</button>
-                <button class="orangeButton">Delete</button>
-              </div>
-            </div>
-            <div class="w-full">
-              <img
-                src="https://vdyttrpqmskpstvuntgk.supabase.co/storage/v1/object/public/public/reference/0.5617510124622584.jpg"
-                alt=""
-                class="h-auto w-full"
-              />
-              <div class="mt-4 flex gap-4">
-                <button class="orangeButton">Copy URL</button>
-                <button class="orangeButton">Delete</button>
+                <div @click="copyContent(asset.URL)" class="orangeButton">
+                  Copy URL
+                </div>
+                <div @click="DeleteFile(asset.FilePath)" class="orangeButton">
+                  Delete
+                </div>
               </div>
             </div>
           </div>
@@ -117,16 +86,23 @@
 </template>
 
 <script setup lang="ts">
-// TODO: https://supabase.com/docs/guides/getting-started/tutorials/with-nuxt-3
-// https://supabase.com/docs/reference/javascript/storage-createbucket
-
 import { customAlphabet } from "nanoid";
 const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const nanoid = customAlphabet(alphabet, 6);
 const supabase = useSupabaseClient();
-
 const user = useSupabaseUser();
 
+// Types and Interface
+type AssetsArray = {
+  FilePath: string;
+  URL: string;
+};
+
+interface InputFileEvent extends Event {
+  target: HTMLInputElement;
+}
+
+// Refs
 const saving = ref<boolean>(false);
 const files = ref();
 const uploading = ref<boolean>(false);
@@ -136,6 +112,7 @@ const gamePin = ref<string>();
 const author_id = ref<string>();
 const ReferenceImageFilePath = ref<string>("");
 const ReferenceImagePublicURL = ref<string>("");
+const assetsArray = ref<AssetsArray[]>([]);
 
 const getAuthorId = async () => {
   author_id.value = user.value.id;
@@ -178,9 +155,53 @@ const uploadReferenceImage = async (filesObject: object) => {
   }
 };
 
+const uploadAssets = async (event: InputFileEvent) => {
+  files.value = event.target.files;
+  console.log(event.target.files);
+
+  try {
+    uploading.value = true;
+
+    if (!files.value || files.value.length === 0) {
+      throw new Error("You must select an image to upload.");
+    }
+
+    Array.from(files.value).forEach(async (file: any) => {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `assets/${fileName}`;
+
+      let { error: uploadError } = await supabase.storage
+        .from("public")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const fileURL = await RetrievePublicURL(filePath);
+
+      assetsArray.value.push({
+        FilePath: filePath,
+        URL: fileURL,
+      });
+    });
+  } catch (error: any) {
+    alert(error.message);
+  } finally {
+    uploading.value = false;
+  }
+};
+
 const RetrievePublicURL = async (FilePath: string) => {
   const { data } = supabase.storage.from("public").getPublicUrl(FilePath);
   return data.publicUrl;
+};
+
+const DeleteFile = async (FilePath: string) => {
+  const { data, error } = await supabase.storage
+    .from("public")
+    .remove([FilePath]);
+  console.log("data", data);
+  console.log("error", error);
 };
 
 const createChallenge = async (event: any) => {
@@ -201,9 +222,7 @@ const createChallenge = async (event: any) => {
       reference_image_file_path: ReferenceImageFilePath.value,
     };
 
-    let { error } = await supabase.from("Challenges").insert(challenge, {
-      returning: "minimal", // Don't return the value after inserting
-    });
+    let { error } = await supabase.from("Challenges").insert(challenge);
     if (error) throw error;
     navigateTo("/challenges");
   } catch (error: any) {
