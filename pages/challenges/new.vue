@@ -41,8 +41,8 @@
           <label for="refImage">Image assets</label>
           <p class="text-sm">
             Upload images that are needed for the design. After uploading a
-            image copy the url past it into our instructions so the participants
-            can use them.
+            image copy the url and past it into your instructions so the
+            participants can use them.
           </p>
 
           <label class="orangeButton" for="imageAssets">
@@ -65,7 +65,7 @@
                 <div @click="copyContent(asset.URL)" class="orangeButton">
                   Copy URL
                 </div>
-                <div @click="DeleteFile(asset.FilePath)" class="orangeButton">
+                <div @click="deleteFile(asset.FilePath)" class="orangeButton">
                   Delete
                 </div>
               </div>
@@ -86,17 +86,10 @@
 </template>
 
 <script setup lang="ts">
-import { customAlphabet } from "nanoid";
-const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const nanoid = customAlphabet(alphabet, 6);
-const supabase = useSupabaseClient();
+import type { Database } from "@/types/database.types";
+const supabase = useSupabaseClient<Database>();
 const user = useSupabaseUser();
-
-// Types and Interface
-type AssetsArray = {
-  FilePath: string;
-  URL: string;
-};
+import type { AssetsArray } from "@/types/AssetsArray.type";
 
 interface InputFileEvent extends Event {
   target: HTMLInputElement;
@@ -118,13 +111,9 @@ const getAuthorId = async () => {
   author_id.value = user.value.id;
 };
 
-const createGamePin = async () => {
-  gamePin.value = nanoid();
-};
-
 onMounted(async () => {
   getAuthorId();
-  createGamePin();
+  gamePin.value = createGamePin();
 });
 
 const uploadReferenceImage = async (filesObject: object) => {
@@ -157,7 +146,6 @@ const uploadReferenceImage = async (filesObject: object) => {
 
 const uploadAssets = async (event: InputFileEvent) => {
   files.value = event.target.files;
-  console.log(event.target.files);
 
   try {
     uploading.value = true;
@@ -177,7 +165,7 @@ const uploadAssets = async (event: InputFileEvent) => {
 
       if (uploadError) throw uploadError;
 
-      const fileURL = await RetrievePublicURL(filePath);
+      const fileURL = await retrievePublicURL(filePath);
 
       assetsArray.value.push({
         FilePath: filePath,
@@ -191,24 +179,50 @@ const uploadAssets = async (event: InputFileEvent) => {
   }
 };
 
-const RetrievePublicURL = async (FilePath: string) => {
+const retrievePublicURL = async (FilePath: string) => {
   const { data } = supabase.storage.from("public").getPublicUrl(FilePath);
   return data.publicUrl;
 };
 
-const DeleteFile = async (FilePath: string) => {
-  const { data, error } = await supabase.storage
-    .from("public")
-    .remove([FilePath]);
-  console.log("data", data);
-  console.log("error", error);
+const deleteFile = async (FilePath: string) => {
+  try {
+    const { data, error } = await supabase.storage
+      .from("public")
+      .remove([FilePath]);
+
+    if (error) throw error;
+
+    removeObjectFromArray(FilePath, assetsArray.value);
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
+
+const saveAssetsToDB = async (
+  ChallengeID: number,
+  assetsArray: AssetsArray[],
+) => {
+  for (const asset of assetsArray) {
+    try {
+      const { error } = await supabase.from("Assets").insert([
+        {
+          file_path: asset.FilePath,
+          url: asset.URL,
+          challenge_id: ChallengeID,
+        },
+      ]);
+      if (error) throw error;
+    } catch (error: any) {
+      alert(error.message);
+    }
+  }
 };
 
 const createChallenge = async (event: any) => {
   saving.value = true;
 
   await uploadReferenceImage(event.target.refImage.files);
-  ReferenceImagePublicURL.value = await RetrievePublicURL(
+  ReferenceImagePublicURL.value = await retrievePublicURL(
     ReferenceImageFilePath.value,
   );
 
@@ -222,22 +236,19 @@ const createChallenge = async (event: any) => {
       reference_image_file_path: ReferenceImageFilePath.value,
     };
 
-    let { error } = await supabase.from("Challenges").insert(challenge);
+    let { data, error } = await supabase
+      .from("Challenges")
+      .insert(challenge)
+      .select("id");
     if (error) throw error;
+
+    if (data) await saveAssetsToDB(data[0].id, assetsArray.value);
+
     navigateTo("/challenges");
   } catch (error: any) {
     alert(error.message);
   } finally {
     saving.value = false;
-  }
-};
-
-const copyContent = async (url: string) => {
-  try {
-    await navigator.clipboard.writeText(url);
-    console.log("Content copied to clipboard");
-  } catch (err) {
-    console.error("Failed to copy: ", err);
   }
 };
 
