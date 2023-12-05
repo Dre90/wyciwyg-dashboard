@@ -41,6 +41,16 @@
             :link="`votes/${challenge.id}`"
             button-text="All votes"
           />
+          <OrangeButtonLink
+            :link="`edit/${challenge.id}`"
+            button-text="Edit challenge"
+          />
+          <button
+            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-red-500 bg-red-500 p-4 text-lg text-bv-text-color-dark transition-all hover:bg-red-600 focus:bg-red-600 active:bg-bv-text-color-dark active:fill-red-500 active:text-red-500"
+            @click="openModal()"
+          >
+            Delete
+          </button>
         </div>
       </div>
       <div class="">
@@ -48,6 +58,7 @@
         <p class="whitespace-pre-line">{{ challenge.instructions }}</p>
       </div>
     </div>
+    <DeleteModal ref="modal" />
   </div>
 </template>
 
@@ -73,6 +84,12 @@ async function getChallenge() {
 
   if (data) challenge.value = data;
 }
+
+const modal = ref(null);
+
+const openModal = () => {
+  modal.value.setIsOpen(true);
+};
 
 onMounted(async () => {
   getChallenge();
