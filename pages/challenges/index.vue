@@ -8,10 +8,16 @@
     </div>
     <div v-else-if="!challenges.length" class="text-4xl text-bv-green">
       <p>You haven't created any challenges yet.</p>
-      <p>Create your first challenge here. COMING SOON</p>
+      <p>
+        Create your
+        <NuxtLink to="/challenges/new" class="hover:bg-bv-green-hover-bg"
+          >first challenge here.</NuxtLink
+        >
+      </p>
       <!-- TODO: -->
     </div>
     <div v-else>
+      <PageHeading text="Challenges" />
       <ul class="flex flex-col gap-2">
         <li
           v-for="challenge in challenges"

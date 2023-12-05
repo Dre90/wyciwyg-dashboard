@@ -1,9 +1,9 @@
 <template>
   <div>
-    <Back link="/challenges" />
     <div>
+      <PageHeading text="Create challenge" />
       <form
-        class="mx-auto flex max-w-2xl flex-col gap-4"
+        class="mx-auto flex max-w-2xl flex-col gap-8"
         @submit.prevent="createChallenge($event)"
       >
         <fieldset class="flex flex-col gap-1">
@@ -14,17 +14,7 @@
             type="text"
             placeholder=""
             name="name"
-            class="rounded-md text-sm text-bv-dark-gray"
-          />
-        </fieldset>
-
-        <fieldset class="flex flex-col gap-1">
-          <label for="instructions">Instructions</label>
-          <textarea
-            v-model="instructions"
-            rows="16"
-            name="instructions"
-            class="rounded-md text-sm text-bv-dark-gray"
+            class="form-input rounded-md text-sm text-bv-dark-gray"
           />
         </fieldset>
 
@@ -37,6 +27,17 @@
             class="rounded-md text-sm"
           />
         </fieldset>
+
+        <fieldset class="flex flex-col gap-1">
+          <label for="instructions">Instructions</label>
+          <textarea
+            v-model="instructions"
+            rows="16"
+            name="instructions"
+            class="form-textarea rounded-md text-sm text-bv-dark-gray"
+          />
+        </fieldset>
+
         <fieldset class="flex flex-col gap-1">
           <label for="refImage">Image assets</label>
           <p class="text-sm">
