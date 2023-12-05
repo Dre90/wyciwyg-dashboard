@@ -8,7 +8,12 @@
     <Menu />
 
     <div class="ml-auto">
-      <button class="button block" @click="signOut">Sign Out</button>
+      <button
+        class="button block h-full border-b-8 border-dark-gray-plus1 p-3 hover:border-bv-green"
+        @click="signOut"
+      >
+        Sign Out
+      </button>
     </div>
   </header>
 </template>
