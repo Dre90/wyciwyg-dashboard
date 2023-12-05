@@ -58,7 +58,7 @@
         <p class="whitespace-pre-line">{{ challenge.instructions }}</p>
       </div>
     </div>
-    <DeleteModal ref="modal" />
+    <DeleteModal ref="modal" :challengeID="id" />
   </div>
 </template>
 

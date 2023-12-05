@@ -11,7 +11,7 @@
         leave-to="opacity-0"
       >
         <div
-          class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          class="fixed inset-0 bg-gray-950 bg-opacity-75 transition-opacity"
         />
       </TransitionChild>
 
@@ -29,9 +29,9 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+              class="relative transform overflow-hidden rounded-lg bg-dark-gray-plus2 text-left font-JetBrainsMono shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
             >
-              <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+              <div class="bg-dark-gray-plus2 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                   <div
                     class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
@@ -44,26 +44,26 @@
                   <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                     <DialogTitle
                       as="h3"
-                      class="text-base font-semibold leading-6 text-gray-900"
+                      class="text-xl font-semibold leading-6 text-bv-text-color"
                       >Delete challenge</DialogTitle
                     >
                     <div class="mt-2">
-                      <p class="text-sm text-gray-500">
-                        Are you sure you want to delete this challenge? All of
-                        the data connected to this challenge will be permanently
-                        removed. This action cannot be undone.
+                      <p class="text-sm text-bv-text-color">
+                        Are you sure you want to delete this challenge?<br />
+                        All of the data connected to this challenge will be
+                        permanently removed. This action cannot be undone.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
               <div
-                class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
+                class="bg-dark-gray-plus3 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
               >
                 <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                  @click="deleteChallenge()"
+                  @click="deleteEverything(challengeID)"
                 >
                   <svg
                     v-if="deleting"
@@ -116,17 +116,43 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
+const supabase = useSupabaseClient();
 
 const isOpen = ref<boolean>(false);
 const deleting = ref<boolean>(false);
 
+const { challengeID } = defineProps(["challengeID"]);
+
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;
 };
-const deleteChallenge = () => {
+const deleteEverything = (id: string) => {
   deleting.value = true;
-  console.log("DELETE");
+  deleteAssets(id);
   //setIsOpen(false);
+};
+
+const deleteAssets = async (id: string) => {
+  const assetsArray = await getAssetsByChallengeID(id);
+  console.log(
+    "🚀 ~ file: DeleteModal.vue:137 ~ deleteAssets ~ assetsArray:",
+    assetsArray,
+  );
+};
+
+const getAssetsByChallengeID = async (id: string) => {
+  try {
+    const { data, error } = await supabase
+      .from("Assets")
+      .select("id, file_path, url")
+      .eq("challenge_id", id);
+
+    if (error) throw error;
+
+    return data;
+  } catch (error: any) {
+    alert(error.message);
+  }
 };
 
 const deleteButtontext = computed(() => {
