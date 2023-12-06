@@ -53,8 +53,4 @@ onMounted(async () => {
   getChallenges();
   generateQRCodeSVG();
 });
-
-definePageMeta({
-  middleware: "auth",
-});
 </script>

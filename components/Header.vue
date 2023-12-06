@@ -8,28 +8,30 @@
     <Menu />
 
     <div class="ml-auto">
-      <button class="button block" @click="signOut">Sign Out</button>
+      <button
+        class="button block h-full border-b-8 border-dark-gray-plus1 p-3 hover:border-bv-green"
+        @click="signOut"
+      >
+        Sign Out
+      </button>
     </div>
   </header>
 </template>
 
 <script setup>
 const user = useSupabaseUser();
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 
 async function signOut() {
   try {
     //loading.value = true;
     let { error } = await client.auth.signOut();
     if (error) throw error;
+    navigateTo("/login");
   } catch (error) {
     alert(error.message);
   } finally {
     //loading.value = false;
   }
 }
-
-watchEffect(async () => {
-  if (!user.value) await navigateTo({ path: "/sign-in", replace: true });
-});
 </script>

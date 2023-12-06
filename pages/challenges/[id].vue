@@ -21,36 +21,36 @@
           <p class="text-xl">Game pin</p>
         </div>
         <div class="flex flex-col gap-6">
-          <NuxtLink
-            :to="`lobby/${challenge.id}`"
-            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
+          <OrangeButtonLink
+            :link="`lobby/${challenge.id}`"
+            button-text="Start"
+          />
+          <OrangeButtonLink
+            :link="`results/${challenge.id}`"
+            button-text="Result"
+          />
+          <OrangeButtonLink
+            :link="`voting/${challenge.id}`"
+            button-text="Voting information"
+          />
+          <OrangeButtonLink
+            :link="`podium/${challenge.id}`"
+            button-text="Podium"
+          />
+          <OrangeButtonLink
+            :link="`votes/${challenge.id}`"
+            button-text="All votes"
+          />
+          <OrangeButtonLink
+            :link="`edit/${challenge.id}`"
+            button-text="Edit challenge"
+          />
+          <button
+            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-red-500 bg-red-500 p-4 text-lg text-bv-text-color-dark transition-all hover:bg-red-600 focus:bg-red-600 active:bg-bv-text-color-dark active:fill-red-500 active:text-red-500"
+            @click="openModal()"
           >
-            Start
-          </NuxtLink>
-          <NuxtLink
-            :to="`results/${challenge.id}`"
-            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
-          >
-            Result
-          </NuxtLink>
-          <NuxtLink
-            :to="`voting/${challenge.id}`"
-            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
-          >
-            Voting information
-          </NuxtLink>
-          <NuxtLink
-            :to="`podium/${challenge.id}`"
-            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
-          >
-            Podium
-          </NuxtLink>
-          <NuxtLink
-            :to="`votes/${challenge.id}`"
-            class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
-          >
-            All votes
-          </NuxtLink>
+            Delete
+          </button>
         </div>
       </div>
       <div class="">
@@ -58,6 +58,7 @@
         <p class="whitespace-pre-line">{{ challenge.instructions }}</p>
       </div>
     </div>
+    <DeleteModal ref="modal" :challengeID="id" />
   </div>
 </template>
 
@@ -84,11 +85,13 @@ async function getChallenge() {
   if (data) challenge.value = data;
 }
 
+const modal = ref(null);
+
+const openModal = () => {
+  modal.value.setIsOpen(true);
+};
+
 onMounted(async () => {
   getChallenge();
-});
-
-definePageMeta({
-  middleware: "auth",
 });
 </script>

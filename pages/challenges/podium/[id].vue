@@ -135,10 +135,6 @@ function countVoteResults(results) {
 onMounted(() => {
   getVoteResults();
 });
-
-definePageMeta({
-  middleware: "auth",
-});
 </script>
 
 <style scoped>

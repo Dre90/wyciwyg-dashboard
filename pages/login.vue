@@ -5,7 +5,7 @@
     >
       <div class="flex w-[384px] flex-1 flex-col justify-center">
         <div class="mb-10">
-          <h1 class="mt-8 mb-2 text-2xl lg:text-3xl">Welcome</h1>
+          <h1 class="mb-2 mt-8 text-2xl lg:text-3xl">Welcome</h1>
           <span class="text-sm">Sign in or sign up using</span>
         </div>
         <div class="flex flex-col gap-4">
@@ -30,7 +30,7 @@
           </button> -->
           <button
             type="button"
-            @click="login('github')"
+            @click="signInWithOAuth('github')"
             class="inline-flex w-full cursor-pointer items-center justify-center border-2 border-bv-orange bg-bv-orange p-4 text-lg text-bv-text-color-dark transition-all hover:bg-bv-dark-orange focus:bg-bv-dark-orange active:bg-bv-text-color-dark active:fill-bv-orange active:text-bv-orange"
           >
             <svg
@@ -64,15 +64,25 @@
 </template>
 
 <script setup>
-const client = useSupabaseAuthClient();
-const user = useSupabaseUser();
+const { auth } = useSupabaseClient();
+//const user = useSupabaseUser();
+
+const redirectTo = `${useRuntimeConfig().public.baseUrl}/confirm`;
 
 definePageMeta({
   layout: "empty",
 });
 
+const signInWithOAuth = async (provider) => {
+  const { data, error } = await auth.signInWithOAuth({
+    provider,
+    options: { redirectTo },
+  });
+  if (error) console.log(error);
+};
+
 // Login method using providers
-const login = async (provider) => {
+/* const login = async (provider) => {
   try {
     //loading.value = true;
     let { error } = await client.auth.signInWithOAuth({ provider });
@@ -83,9 +93,9 @@ const login = async (provider) => {
   } finally {
     //loading.value = false;
   }
-};
+}; */
 
-watchEffect(async () => {
+/* watchEffect(async () => {
   if (user.value) await navigateTo({ path: "/", replace: true });
-});
+}); */
 </script>

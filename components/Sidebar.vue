@@ -16,7 +16,7 @@
 
 <script setup>
 const user = useSupabaseUser();
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 
 async function signOut() {
   try {
@@ -29,8 +29,4 @@ async function signOut() {
     //loading.value = false;
   }
 }
-
-watchEffect(async () => {
-  if (!user.value) await navigateTo({ path: "/sign-in", replace: true });
-});
 </script>
