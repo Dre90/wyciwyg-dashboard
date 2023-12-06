@@ -18,7 +18,7 @@
     </div>
     <div v-else>
       <PageHeading text="Challenges" />
-      <ul class="flex flex-col gap-2">
+      <ul class=": grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
         <li
           v-for="challenge in challenges"
           :key="challenge.id"
@@ -27,15 +27,20 @@
         >
           <NuxtLink
             :to="`/challenges/${challenge.id}`"
-            class="block hover:bg-bv-green-hover-bg"
+            class="block h-full hover:bg-bv-green-hover-bg"
           >
-            <div class="flex h-20">
-              <img
+            <div class="flex flex-col">
+              <!-- <img
                 :src="challenge.image_url"
                 alt="Thumbnail of the challenge reference image"
-                class=""
+                class="max-w-fit"
+              /> -->
+              <NuxtImg
+                :src="challenge.image_url"
+                alt="Thumbnail of the challenge reference image"
+                class="max-w-fit"
               />
-              <div class="ml-6 self-center text-2xl">
+              <div class="mb-6 mt-4 self-center px-2 text-2xl">
                 {{ challenge.name }}
               </div>
             </div>
