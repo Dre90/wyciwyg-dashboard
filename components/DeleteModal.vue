@@ -126,26 +126,140 @@ const { challengeID } = defineProps(["challengeID"]);
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;
 };
-const deleteEverything = (id: string) => {
+const deleteEverything = async (id: string) => {
   deleting.value = true;
-  deleteAssets(id);
-  //setIsOpen(false);
+  try {
+    await deleteAssets(id);
+    await deleteVotes(id);
+    await deleteStats(id);
+    await deleteResults(id);
+    await deleteReferenceImage(id);
+    await deleteChallenge(id);
+  } catch (error: any) {
+    alert(error.message);
+  } finally {
+    deleting.value = false;
+    setIsOpen(false);
+    navigateTo("/challenges");
+  }
 };
 
 const deleteAssets = async (id: string) => {
-  const assetsArray = await getAssetsByChallengeID(id);
-  console.log(
-    "🚀 ~ file: DeleteModal.vue:137 ~ deleteAssets ~ assetsArray:",
-    assetsArray,
-  );
+  const assetsArray = await getAssetsListByChallengeID(id);
+  if (typeof assetsArray !== "undefined") {
+    for (const asset of assetsArray) {
+      try {
+        const { data, error } = await supabase.storage
+          .from("public")
+          .remove([asset.file_path]);
+
+        if (error) throw error;
+      } catch (error: any) {
+        alert(error.message);
+      }
+      try {
+        const { error } = await supabase
+          .from("Assets")
+          .delete()
+          .eq("id", asset.id);
+
+        if (error) throw error;
+      } catch (error: any) {
+        alert(error.message);
+      }
+    }
+  }
 };
 
-const getAssetsByChallengeID = async (id: string) => {
+const deleteVotes = async (id: string) => {
+  try {
+    const { error } = await supabase
+      .from("Vote")
+      .delete()
+      .eq("challenge_id", id);
+
+    if (error) throw error;
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
+
+const deleteStats = async (id: string) => {
+  try {
+    const { error } = await supabase
+      .from("Stats")
+      .delete()
+      .eq("challenge_id", id);
+
+    if (error) throw error;
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
+
+const deleteResults = async (id: string) => {
+  try {
+    const { error } = await supabase
+      .from("Results")
+      .delete()
+      .eq("challenge_id", id);
+
+    if (error) throw error;
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
+
+const deleteChallenge = async (id: string) => {
+  try {
+    const { error } = await supabase.from("Challenges").delete().eq("id", id);
+
+    if (error) throw error;
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
+
+const deleteReferenceImage = async (id: string) => {
+  const referenceImageFilePath =
+    await getReferenceImageFilePathFromChallenge(id);
+  if (
+    typeof referenceImageFilePath !== "undefined" &&
+    referenceImageFilePath.length > 0
+  ) {
+    try {
+      const { data, error } = await supabase.storage
+        .from("public")
+        .remove([referenceImageFilePath[0].reference_image_file_path]);
+
+      if (error) throw error;
+    } catch (error: any) {
+      alert(error.message);
+    }
+  }
+};
+
+const getAssetsListByChallengeID = async (id: string) => {
   try {
     const { data, error } = await supabase
       .from("Assets")
       .select("id, file_path, url")
       .eq("challenge_id", id);
+
+    if (error) throw error;
+
+    return data;
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
+
+const getReferenceImageFilePathFromChallenge = async (id: string) => {
+  try {
+    const { data, error } = await supabase
+      .from("Challenges")
+      .select("reference_image_file_path")
+      .eq("id", id);
 
     if (error) throw error;
 
