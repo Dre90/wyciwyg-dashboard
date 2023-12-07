@@ -11,10 +11,9 @@
 
     <div v-else class="flex w-full gap-10">
       <div class="flex w-1/4 flex-col gap-12">
-        <img
+        <NuxtImg
           :src="challenge.image_url"
           alt="The challenge reference image"
-          class=""
         />
         <div class="flex flex-col items-center">
           <span class="text-8xl text-bv-green">{{ challenge.game_pin }}</span>
@@ -53,7 +52,7 @@
           </button>
         </div>
       </div>
-      <div class="">
+      <div class="w-3/4">
         <h1 class="mb-6 text-7xl">{{ challenge.name }}</h1>
         <p class="whitespace-pre-line">{{ challenge.instructions }}</p>
       </div>

@@ -61,7 +61,7 @@
           />
           <div class="my-4 grid grid-cols-2 gap-4">
             <div v-for="asset in assetsArray" class="w-full">
-              <img :src="asset.URL" alt="" class="h-auto w-full" />
+              <NuxtImg :src="asset.URL" alt="" class="h-auto w-full" />
               <div class="mt-4 flex gap-4">
                 <div @click="copyContent(asset.URL)" class="orangeButton">
                   Copy URL
