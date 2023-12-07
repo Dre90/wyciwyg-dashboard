@@ -18,7 +18,7 @@
     </div>
     <div v-else>
       <PageHeading text="Challenges" />
-      <ul class=": grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <ul class=": grid grid-cols-1 gap-8 lg:grid-cols-2">
         <li
           v-for="challenge in challenges"
           :key="challenge.id"
@@ -27,21 +27,20 @@
         >
           <NuxtLink
             :to="`/challenges/${challenge.id}`"
-            class="block h-full hover:bg-bv-green-hover-bg"
+            class="block hover:bg-bv-green-hover-bg"
           >
-            <div class="flex flex-col">
-              <!-- <img
-                :src="challenge.image_url"
-                alt="Thumbnail of the challenge reference image"
-                class="max-w-fit"
-              /> -->
-              <NuxtImg
-                :src="challenge.image_url"
-                alt="Thumbnail of the challenge reference image"
-                class="max-w-fit"
-              />
-              <div class="mb-6 mt-4 self-center px-2 text-2xl">
-                {{ challenge.name }}
+            <div class="flex flex-row">
+              <div class="flex h-48 w-1/2 items-center overflow-hidden">
+                <NuxtImg
+                  :src="challenge.image_url"
+                  alt="Thumbnail of the challenge reference image"
+                  class="overflow-hidden"
+                />
+              </div>
+              <div class="w-1/2 px-4 py-4">
+                <h2 class="text-2xl">
+                  {{ challenge.name }}
+                </h2>
               </div>
             </div>
           </NuxtLink>
@@ -63,7 +62,7 @@ async function getChallenges() {
     .from("Challenges")
     .select("id, name, image_url")
     .eq("author_id", user.value.id)
-    .order("created_at");
+    .order("created_at", { ascending: false });
 
   if (data || error) isLoading.value = false;
 
