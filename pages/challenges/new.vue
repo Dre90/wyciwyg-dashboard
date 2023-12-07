@@ -11,6 +11,7 @@
           <input
             v-model="name"
             autofocus
+            required
             type="text"
             placeholder=""
             name="name"
@@ -25,6 +26,7 @@
             name="refImage"
             accept="image/*"
             class="rounded-md text-sm"
+            required
           />
         </fieldset>
 
@@ -35,6 +37,7 @@
             rows="16"
             name="instructions"
             class="form-textarea rounded-md text-sm text-bv-dark-gray"
+            required
           />
         </fieldset>
 
@@ -61,7 +64,7 @@
           />
           <div class="my-4 grid grid-cols-2 gap-4">
             <div v-for="asset in assetsArray" class="w-full">
-              <img :src="asset.URL" alt="" class="h-auto w-full" />
+              <NuxtImg :src="asset.URL" alt="" class="h-auto w-full" />
               <div class="mt-4 flex gap-4">
                 <div @click="copyContent(asset.URL)" class="orangeButton">
                   Copy URL

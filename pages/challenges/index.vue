@@ -18,7 +18,7 @@
     </div>
     <div v-else>
       <PageHeading text="Challenges" />
-      <ul class="flex flex-col gap-2">
+      <ul class=": grid grid-cols-1 gap-8 lg:grid-cols-2">
         <li
           v-for="challenge in challenges"
           :key="challenge.id"
@@ -29,14 +29,18 @@
             :to="`/challenges/${challenge.id}`"
             class="block hover:bg-bv-green-hover-bg"
           >
-            <div class="flex h-20">
-              <img
-                :src="challenge.image_url"
-                alt="Thumbnail of the challenge reference image"
-                class=""
-              />
-              <div class="ml-6 self-center text-2xl">
-                {{ challenge.name }}
+            <div class="flex flex-row">
+              <div class="flex h-48 w-1/2 items-center overflow-hidden">
+                <NuxtImg
+                  :src="challenge.image_url"
+                  alt="Thumbnail of the challenge reference image"
+                  class="overflow-hidden"
+                />
+              </div>
+              <div class="w-1/2 px-4 py-4">
+                <h2 class="text-2xl">
+                  {{ challenge.name }}
+                </h2>
               </div>
             </div>
           </NuxtLink>
@@ -58,7 +62,7 @@ async function getChallenges() {
     .from("Challenges")
     .select("id, name, image_url")
     .eq("author_id", user.value.id)
-    .order("created_at");
+    .order("created_at", { ascending: false });
 
   if (data || error) isLoading.value = false;
 

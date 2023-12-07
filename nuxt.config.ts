@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxtjs/supabase", "@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/supabase", "@nuxtjs/tailwindcss", "@nuxt/image"],
   app: {
     head: {
       title: "WYCIWYG - Dashboard",
@@ -27,5 +27,8 @@ export default defineNuxtConfig({
       login: "/login",
       callback: "/confirm",
     },
+  },
+  image: {
+    domains: ["supabase.co"],
   },
 });
