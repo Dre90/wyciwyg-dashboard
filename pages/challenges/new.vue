@@ -11,6 +11,7 @@
           <input
             v-model="name"
             autofocus
+            required
             type="text"
             placeholder=""
             name="name"
@@ -25,6 +26,7 @@
             name="refImage"
             accept="image/*"
             class="rounded-md text-sm"
+            required
           />
         </fieldset>
 
@@ -35,6 +37,7 @@
             rows="16"
             name="instructions"
             class="form-textarea rounded-md text-sm text-bv-dark-gray"
+            required
           />
         </fieldset>
 
