@@ -15,7 +15,7 @@
             type="text"
             placeholder=""
             name="name"
-            class="form-input rounded-md text-sm text-bv-dark-gray"
+            class="form-input rounded-md border-2 border-bv-dark-gray text-sm text-bv-dark-gray focus:border-bv-orange focus:outline-none focus:ring-2 focus:ring-bv-orange"
           />
         </fieldset>
 
@@ -25,7 +25,7 @@
             type="file"
             name="refImage"
             accept="image/*"
-            class="rounded-md text-sm"
+            class="rounded-md border-2 border-bv-dark-gray text-sm focus:border-bv-orange focus:outline-none focus:ring-2 focus:ring-bv-orange"
             required
           />
         </fieldset>
@@ -36,7 +36,7 @@
             v-model="instructions"
             rows="16"
             name="instructions"
-            class="form-textarea rounded-md text-sm text-bv-dark-gray"
+            class="form-textarea rounded-md border-2 border-bv-dark-gray text-sm text-bv-dark-gray focus:border-bv-orange focus:outline-none focus:ring-2 focus:ring-bv-orange"
             required
           />
         </fieldset>
@@ -112,7 +112,7 @@ const ReferenceImagePublicURL = ref<string>("");
 const assetsArray = ref<AssetsArray[]>([]);
 
 const getAuthorId = async () => {
-  author_id.value = user.value.id;
+  author_id.value = user.value?.id;
 };
 
 onMounted(async () => {
